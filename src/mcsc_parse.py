@@ -1,7 +1,7 @@
 import pandas as pd
 
 column_name = ["name", "age", "gender", "last_seen", "from", "img_url"]
-data = [[]]
+
 
 def get_prov(provinces:list) -> list:
     """
@@ -28,12 +28,11 @@ def get_prov(provinces:list) -> list:
 
     for prov in provinces:
         if prov not in prov_dict.keys():
-            print(f"Province/Territory of {prov} is either not an official Acronym or doesn't exist.")
+            print(f"Province/Territory of {prov} is either not an official acronym or does NOT exist.")
             return None
         else:
             url_queries.append(prov_dict[prov])
     
-    print(url_queries)
     
     return url_queries
 
@@ -45,4 +44,16 @@ def get_all_prov() -> list:
 
     all_prov = ["AB","BC","MB","NB","NL","NS","ON","PE","QC","SK","NU","NT","YT"]
     return get_prov(all_prov)
+
+def get_mcsc_link(prov:list) -> list:
+    """
+    Gets all the links for mcsc to start scraping
+    """
+
+    all_links = []
+
+    for province in prov:
+        all_links.append(f"https://www.mcsc.ca/missing-children-cases/?p={province}&o=missing&d=desc")
+    
+    return all_links
 
