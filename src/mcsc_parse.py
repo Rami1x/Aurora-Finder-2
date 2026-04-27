@@ -1,4 +1,6 @@
 import pandas as pd
+from bs4 import BeautifulSoup
+import requests
 
 column_name = ["name", "age", "gender", "last_seen", "from", "img_url"]
 
@@ -56,4 +58,65 @@ def get_mcsc_link(prov:list) -> list:
         all_links.append(f"https://www.mcsc.ca/missing-children-cases/?p={province}&o=missing&d=desc")
     
     return all_links
+
+
+def get_parsed_data(url:str) -> list:
+    """
+    Gets text data and sorts into a list
+    """
+    parsed_data = []
+    
+    r = requests.get(url)
+    soup = BeautifulSoup(r.text, "html.parser")
+
+
+    cases = soup.find_all("div", class_="cell large-9 small-12")
+    
+    for case in cases:
+        name = None
+        age = None
+        gender = None
+        missing_since = None
+        location = None
+
+        text = case.get_text()
+
+        for line in text.splitlines():
+            line = line.strip()
+
+            if ":" not in line:
+                continue
+        
+            key, value = line.split(":", 1)
+            key = key.strip()
+            value = value.strip()
+            
+            match key:
+                case "Name":
+                    name = value
+                
+                case "Age":
+                    age = value
+                
+                case "Gender":
+                    gender = value
+
+                case "Missing Since":
+                    missing_since = value
+
+                case "Location":
+                    location = value
+
+        parsed_data.append([
+            name, 
+            age, 
+            gender, 
+            missing_since, 
+            location
+            ])
+
+            
+    return parsed_data
+
+
 
