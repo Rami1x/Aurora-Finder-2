@@ -1,10 +1,5 @@
-import pandas as pd
 from bs4 import BeautifulSoup
 import requests
-from urllib.parse import urljoin
-
-column_name = ["name", "age", "gender", "last_seen", "from", "img_url"]
-
 
 def get_prov(provinces:list) -> list:
     """
